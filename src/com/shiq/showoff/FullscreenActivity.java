@@ -1,20 +1,21 @@
 package com.shiq.showoff;
 
+import java.util.ArrayList;
+
+import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.Activity;
-import android.graphics.drawable.Drawable;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.StrictMode;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup.LayoutParams;
-import android.widget.GridView;
-import android.widget.ImageView;
+import android.widget.FrameLayout;
 import android.widget.TextView;
 
-import com.shiq.showoff.R.drawable;
 import com.shiq.showoff.util.SystemUiHider;
 
 /**
@@ -52,6 +53,7 @@ public class FullscreenActivity extends Activity {
 	 */
 	private SystemUiHider mSystemUiHider;
 
+	@SuppressLint("NewApi")
 	@TargetApi(Build.VERSION_CODES.GINGERBREAD)
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -78,14 +80,48 @@ public class FullscreenActivity extends Activity {
 		Integer sum = ib.queryInstantState();
 		if(!sum.equals(Integer.valueOf(0))){
 			TextView tv = (TextView)findViewById(R.id.fullscreen_content);
-			tv.setText("360彩票\r\n累计中奖:\r\n"+sum.toString()+"元");
+			//tv.setText("360彩票\r\n累计中奖:\r\n"+sum.toString()+"元");
+			tv.setText("360彩票\r\n已累计中奖:\r\n");
+			
+			//int height = contentView.getHeight();
+			//int width = contentView.getWidth();
+			
+			ArrayList<Integer> list = new ArrayList<Integer>();
+			for(int i=1;i<4;i++){
+				Integer decimal = sum%10000;
+				Log.i("info", decimal.toString());
+				sum /= 10000;
+				list.add(decimal);
+			}
+			StringBuilder show = new StringBuilder();
+			for(int i=(list.size()-1);i>=0;i--){
+				if(i==1){
+					show.append("亿");
+				}else if(i==0){
+					show.append("万");
+				}
+				show.append(list.get(i));
+			}
+			show.append("元");
+			TextView tv1 = new TextView(this);
+			tv1.setPadding(38, 470, 8, 8);
+			tv1.setTextSize(35);
+			tv1.setTextColor(Color.RED);
+			tv1.setText(show);
+			
+//			ImageView imageView= new ImageView(this);
+//			imageView.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
+//			imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+//			imageView.setPadding(18, 435, 8, 8);
+//			imageView.setImageResource(R.drawable.bg_num);
+			//imageView.setVisibility(View.VISIBLE);
+			
+			FrameLayout layout = (FrameLayout)findViewById(R.id.fullLayout);
+			//layout.addView(imageView);
+			layout.addView(tv1);
 		}
 		
-		ImageView imageView= new ImageView(this);
-		imageView.setLayoutParams(new LayoutParams(85, 85));
-		imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-		imageView.setPadding(8, 8, 8, 8);
-		imageView.setImageResource(android.R.drawable.bottom_bar);
+		
          
          
 		// Set up an instance of SystemUiHider to control the system UI for
