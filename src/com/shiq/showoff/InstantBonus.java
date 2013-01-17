@@ -12,6 +12,7 @@ public class InstantBonus {
 		String url = "http://app.cp.360.cn/int/getidxinfo";
 		try {
 			String res = HttpUtil.requestByHttpGet(url);
+			//String res = HttpUtil.requestByHttpPost(url, null);
 			JSONObject json = new JSONObject(res);
 			String sumStr = json.get("sum").toString();
 			sum = Integer.valueOf(sumStr);

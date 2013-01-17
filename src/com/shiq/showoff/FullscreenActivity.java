@@ -1,15 +1,21 @@
 package com.shiq.showoff;
 
-import com.shiq.showoff.util.SystemUiHider;
-
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.StrictMode;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup.LayoutParams;
+import android.widget.GridView;
+import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.shiq.showoff.R.drawable;
+import com.shiq.showoff.util.SystemUiHider;
 
 /**
  * An example full-screen activity that shows and hides the system UI (i.e.
@@ -46,6 +52,7 @@ public class FullscreenActivity extends Activity {
 	 */
 	private SystemUiHider mSystemUiHider;
 
+	@TargetApi(Build.VERSION_CODES.GINGERBREAD)
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -55,14 +62,32 @@ public class FullscreenActivity extends Activity {
 		final View controlsView = findViewById(R.id.fullscreen_content_controls);
 		final View contentView = findViewById(R.id.fullscreen_content);
 
+		StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder().detectDiskReads()       
+		        .detectDiskWrites()       
+		        .detectNetwork()          
+		        .penaltyLog()       
+		        .build());       
+		StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder()       
+		        .detectLeakedSqlLiteObjects()    
+		        .penaltyLog()       
+		        .penaltyDeath()       
+		        .build());    
+ 
 		//showBonus();
 		InstantBonus ib = new InstantBonus();
 		Integer sum = ib.queryInstantState();
 		if(!sum.equals(Integer.valueOf(0))){
 			TextView tv = (TextView)findViewById(R.id.fullscreen_content);
-			tv.setText("360彩票累计中奖:"+sum.toString()+"元！");
+			tv.setText("360彩票\r\n累计中奖:\r\n"+sum.toString()+"元");
 		}
 		
+		ImageView imageView= new ImageView(this);
+		imageView.setLayoutParams(new LayoutParams(85, 85));
+		imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+		imageView.setPadding(8, 8, 8, 8);
+		imageView.setImageResource(android.R.drawable.bottom_bar);
+         
+         
 		// Set up an instance of SystemUiHider to control the system UI for
 		// this activity.
 		mSystemUiHider = SystemUiHider.getInstance(this, contentView,
